@@ -33,6 +33,7 @@ object Main {
     val list: List[String] = List("jw")
     val classInformations: List[ClassInformation] = createClassInformation(args(0), args(1))
     classInformations.foreach(m => {
+      println("searchResult")
       printSearchResults("jw", new Searcher().search(m, "jw"))
       println("compareResult")
       printCompareResults("jw", new SeachResults("jw", new Searcher().search(m, "jw")).runCompare().compareResults)
