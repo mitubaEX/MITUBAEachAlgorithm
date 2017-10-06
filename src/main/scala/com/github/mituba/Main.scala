@@ -10,11 +10,10 @@ import scala.io.Source
 
 
 object Main {
-  def createClassInformation(filename: String): List[ClassInformation] ={
+  def createClassInformation(filename: String, kindOfBirthmark: String): List[ClassInformation] ={
     val fileSource = Source.fromFile(filename)
     fileSource.getLines().map(_.split(",", 4))
-      .filter(_.length >= 4)
-      .map(n => new ClassInformation(filename = n(0), place = n(1), birthmark = "2-gram", data = n(3))).toList
+      .filter(_.length >= 4) .map(n => new ClassInformation(filename = n(0), place = n(1), birthmark = kindOfBirthmark, data = n(3))).toList
   }
 
   def printCompareResults(algorithm: String, compareResults: List[CompareResult]): Unit ={
@@ -31,17 +30,13 @@ object Main {
 
   def main(args: Array[String]): Unit = {
 
-    val list: List[String] = List("jw", "edit", "ngram")
-    val classInformations: List[ClassInformation] = createClassInformation(args(0))
-    val searchResults: List[SeachResults] = list.flatMap(n =>
-      classInformations.map(m => new SeachResults(n, new Searcher().search(m, n)))
+    val list: List[String] = List("jw")
+    val classInformations: List[ClassInformation] = createClassInformation(args(0), args(1))
+    classInformations.foreach(m => {
+      printSearchResults("jw", new Searcher().search(m, "jw"))
+      println("compareResult")
+      printCompareResults("jw", new SeachResults("jw", new Searcher().search(m, "jw")).runCompare().compareResults)
+    }
     )
-
-    searchResults.foreach(n => printSearchResults(n.algorithm, n.seachResults))
-
-
-
-//    val compareResultsList: List[CompareResults] = searchResults.map(n => n.runCompare())
-//    compareResultsList.foreach(n => printCompareResults(n.algorithm, n.compareResults))
   }
 }
