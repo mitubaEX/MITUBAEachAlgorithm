@@ -11,7 +11,12 @@ import scala.io.Source
   */
 class SeachResults(val algorithm: String, val seachResults: List[SeachResult]){
   def runCompare(): CompareResults ={
-    new CompareResults(algorithm = algorithm,compareResults = seachResults.map(n => compare(n.class1, n.class2)))
+    val start = System.currentTimeMillis
+
+    val result = new CompareResults(algorithm = algorithm,compareResults = seachResults.map(n => compare(n.class1, n.class2)))
+
+    println("CompareTime:" + (System.currentTimeMillis - start) + "msec")
+    result
   }
 
   def compare(class1: ClassInformation, class2: ClassInformation): CompareResult ={

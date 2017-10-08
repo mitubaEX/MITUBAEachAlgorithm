@@ -45,12 +45,17 @@ class Searcher {
       .addQueryParameter("sort", s"""score desc""")
       .setContentType("application/json", "UTF-8")  << postParam
 
+    val start = System.currentTimeMillis
+
     val http = Http(requestHandler OK as.String)
-    http().split("\n").map(_.split(",", 5))
+    val result = http()
+    val resultList = result.split("\n").map(_.split(",", 5))
       .map(n => new SeachResult(classInformation,
         new ClassInformation(filename=n(0), place=n(2), birthmark=n(3), data=n(4).replace("\\", "")),
         n(1))).filterNot(_.sim.contains("score"))
       .sortWith(_.sim.toDouble > _.sim.toDouble)
       .toList
+    println("searchTime:" + (System.currentTimeMillis - start) + "msec")
+    resultList
   }
 }
